@@ -34,7 +34,3 @@ go-reloaded/
 ✅ All success test cases written in `docs/golden-tests.md`
 
 ---
-
-### Author
-**Theodore Konstadiniakos**  
-Zone01 Athens · 2025
