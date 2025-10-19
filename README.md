@@ -19,7 +19,7 @@ go-reloaded/
 │
 ├── docs/
 │ ├── analysis.md # Detailed description of the problem, rules, and chosen method (Pipeline)
-│ └── golden-tests.md # The “Golden Test Set” defining all success cases
+│ └── golden test set.md # The “Golden Test Set” defining all success cases, tricky parts, and a long paragraph with rules
 │
 └── README.md
 
