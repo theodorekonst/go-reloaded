@@ -56,13 +56,13 @@ Input file
    ↓
 [ Numbers (hex/bin) ]
    ↓
-[ Casing (up/low/cap[, n]) ]
+[ Casing (up/low/cap) ]
    ↓
 [ Articles (a→an) ]
    ↓
-[ Punctuation ]
+[ Punctuation (σημεία στίξης) ]
    ↓
-[ Quotes ]
+[ Quotes (απόστροφοι) ]
    ↓
 Output file
 
