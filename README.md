@@ -16,12 +16,12 @@ The focus is only on **understanding the problem**, **designing the logic**, and
 ## 📂 Folder Structure
 
 go-reloaded/
-│
-├── docs/
-│   ├── analysis.md
-│   └── golden-tests.md
-│
-└── README.md
+|
+|-- docs/
+|   |-- analysis.md
+|   |-- golden-tests.md
+|
+|-- README.md
 
 
 ---
