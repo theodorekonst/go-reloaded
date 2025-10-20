@@ -15,13 +15,16 @@ The focus is only on **understanding the problem**, **designing the logic**, and
 
 ## 📂 Folder Structure
 
+```text
 go-reloaded/
-|
-|-- docs/
-|   |-- analysis.md
-|   |-- golden-tests.md
-|
-|-- README.md
+│
+├── docs/
+│   ├── analysis.md        # Detailed description of the problem, rules, and chosen method (Pipeline)
+│   └── golden-tests.md    # The “Golden Test Set” defining all success cases, tricky parts, and combined paragraph
+│
+└── README.md              # Overview of what has been completed so far
+```
+
 
 
 ---
@@ -31,6 +34,6 @@ go-reloaded/
 ✅ Complete problem analysis written in `docs/analysis.md`  
 ✅ Comparison between **Pipeline** and **FSM** methods  
 ✅ Final decision: **Pipeline method** (modular, clear, auditable)  
-✅ All success test cases written in `docs/golden-tests.md`
+✅ All success test cases written in `docs/golden test set.md`
 
 ---
