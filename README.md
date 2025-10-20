@@ -18,8 +18,8 @@ The focus is only on **understanding the problem**, **designing the logic**, and
 go-reloaded/
 │
 ├── docs/
-│ ├── analysis.md # Detailed description of the problem, rules, and chosen method (Pipeline)
-│ └── golden test set.md # The “Golden Test Set” defining all success cases, tricky parts, and a long paragraph with rules
+│   ├── analysis.md
+│   └── golden test set.md
 │
 └── README.md
 
