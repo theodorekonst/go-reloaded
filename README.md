@@ -19,7 +19,7 @@ go-reloaded/
 │
 ├── docs/
 │   ├── analysis.md
-│   └── golden test set.md
+│   └── golden-tests.md
 │
 └── README.md
 
