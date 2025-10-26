@@ -104,4 +104,4 @@ Wait... what?! are you sure!?
 it (cap) was a honest idea, but the plan had 1E (hex) steps, and only 10 (bin) were done ...why ? ' maybe later ' she said. the quick fix (up, 3) was proposed, yet a unusual error appeared; we tried again (low, 2) AFTER THAT, and a hour passed! finally, we wrote the Brooklyn bridge (cap) story, and it was great (cap, 4) , right ?
 
 **Expected Output**
-It was an honest idea, but the plan had 30 steps, and only 2 were done... why? 'maybe later' she said. The QUICK FIX was proposed, yet an unusual error appeared; we tried again after that, and an hour passed! Finally, we wrote the Brooklyn Bridge story, and It Was Great, right
+It was an honest idea, but the plan had 30 steps, and only 2 were done... why? 'maybe later' she said. The QUICK FIX was proposed, yet an unusual error appeared; we tried again after that, and an hour passed! Finally, we wrote the Brooklyn Bridge story, and It Was Great, right?
