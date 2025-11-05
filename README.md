@@ -1,15 +1,14 @@
 # go-reloaded   
+
 ### Week 1 – Documentation Phase
 
 ---
 
 ## 📘 Project Description
+
 This project is about creating a **text reloader tool** in Go.  
 It reads a text file as input, detects transformation instructions like `(hex)`, `(up, 2)`, `(low)` etc.,  
 applies the corresponding rules, and writes a corrected version of the text into a new file.
-
-During this **first week**, no Go code is written yet.  
-The focus is only on **understanding the problem**, **designing the logic**, and **defining success test cases**.
 
 ---
 
