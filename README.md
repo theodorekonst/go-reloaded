@@ -158,7 +158,7 @@ Pipeline Design for clean separation of concerns:
 
 ## 🎯 Requirements
 
-* Go 1.21+
+* Go 1.25
 * No external dependencies
 
 ## 📝 License
