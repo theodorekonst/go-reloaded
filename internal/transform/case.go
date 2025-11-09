@@ -7,6 +7,8 @@ import (
 	"go-reloaded/internal/token"
 )
 
+// ApplyCaseTags updates words affected by (up), (low), (cap) and their (mode, n) forms.
+// It applies to the LAST n previous Word tokens (skip Space/Quote/Punct/Group), not including the tag itself.
 func ApplyCaseTags(toks []token.Tok) []token.Tok {
 	out := make([]token.Tok, 0, len(toks))
 
@@ -20,22 +22,23 @@ func ApplyCaseTags(toks []token.Tok) []token.Tok {
 		mode, n, kind := parseCaseTagTri(t.Text)
 		switch kind {
 		case caseUnknown:
-			// Not a case tag → keep; another transform may handle it (hex/bin)
+			// Not a case tag → keep for other transforms (hex/bin) or drop later
 			out = append(out, t)
 			continue
 		case caseMalformed:
-			// Looks like a case tag but malformed → drop tag, do nothing
+			// Looks like case tag but malformed → drop tag
 			continue
 		case caseOK:
-			// n==0 → explicitly do nothing, just drop the tag
 			if n == 0 {
+				// Explicit no-op → drop the tag
 				continue
 			}
-			// Apply to previous n Word tokens (skip non-words)
-			j := len(out) - 1
+			// Walk backward over OUT (tokens already emitted) and transform the last n Word tokens
 			applied := 0
+			j := len(out) - 1
 			for j >= 0 && applied < n {
-				if out[j].K == token.Word {
+				switch out[j].K {
+				case token.Word:
 					switch mode {
 					case "up":
 						out[j].Text = strings.ToUpper(out[j].Text)
@@ -45,6 +48,8 @@ func ApplyCaseTags(toks []token.Tok) []token.Tok {
 						out[j].Text = capWord(out[j].Text)
 					}
 					applied++
+				default:
+					// skip Space/Quote/Punct/Group
 				}
 				j--
 			}
