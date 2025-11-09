@@ -15,9 +15,10 @@ func ProcessText(in string) string {
 	// 2) case tags
 	toks = transform.ApplyCaseTags(toks)
 
-	// 3) quotes: tighten insides, then ensure gap after closing quote before words
+	// QUOTES: tighten interiors (strong), then ensure gap after closing quote
 	toks = transform.ApplyQuotes(toks)
-	toks = transform.ApplyQuotes(toks)                // extra pass (cheap, robust)
+	// optional second pass; cheap and helps with adjacency created earlier
+	toks = transform.ApplyQuotes(toks)
 	toks = transform.ApplySpaceAfterClosingQuote(toks)
 
 	// 4) articles (a -> an), skipping spaces & quotes to the next word
