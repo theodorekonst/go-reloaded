@@ -5,9 +5,6 @@ A complete text transformation tool written in Go that processes files with spec
 ## 🚀 Quick Start
 
 ```
-# Build the program
-go build .
-
 # Run with input and output files
 go run . input.txt output.txt
 
