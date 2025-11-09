@@ -28,7 +28,9 @@ func ProcessText(in string) string {
 	toks = transform.ApplySpaces(toks)
 	toks = transform.ApplyPunctuation(toks)
 
-	// Drop any leftover/unknown tags
+	// CLEANUP / SPECIALS
+	toks = transform.ApplyDashQuoteTight(toks)     // tighten —'quote' (remove space)
+	toks = transform.ApplyCaseNextMarker(toks)     // transform next word after case-range tag
 	toks = transform.ApplyDropTags(toks)
 
 	// FINAL: remove plain spaces flush against quote edges

@@ -7,6 +7,8 @@ import (
 	"go-reloaded/internal/token"
 )
 
+const caseNextMarkerPrefix = "CASE_NEXT:"
+
 // ApplyCaseTags updates words affected by (up), (low), (cap) and their (mode, n) forms.
 // It applies to the LAST n previous Word tokens (skip Space/Quote/Punct/Group), not including the tag itself.
 func ApplyCaseTags(toks []token.Tok) []token.Tok {

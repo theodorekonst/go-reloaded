@@ -38,7 +38,7 @@ func Tokenize(s string) []Tok {
 
 	isPunct := func(rr rune) bool {
 		switch rr {
-		case '.', ',', '!', '?', ':', ';':
+		case '.', ',', '!', '?', ':', ';', '—':
 			return true
 		default:
 			return false
