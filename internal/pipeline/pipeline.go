@@ -8,30 +8,32 @@ import (
 func ProcessText(in string) string {
 	toks := token.Tokenize(in)
 
-	// 1) number conversions first
+	// Numbers
 	toks = transform.ApplyHex(toks)
 	toks = transform.ApplyBin(toks)
 
-	// 2) case tags
+	// Case tags
 	toks = transform.ApplyCaseTags(toks)
 
-	// QUOTES: tighten interiors (strong), then ensure gap after closing quote
+	// Quotes: tighten interiors; ensure gap after closing quotes when followed by a word
 	toks = transform.ApplyQuotes(toks)
-	// optional second pass; cheap and helps with adjacency created earlier
-	toks = transform.ApplyQuotes(toks)
+	toks = transform.ApplyQuotes(toks)                // cheap second pass helps tricky adjacencies
 	toks = transform.ApplySpaceAfterClosingQuote(toks)
 
-	// 4) articles (a -> an), skipping spaces & quotes to the next word
+	// Articles
 	toks = transform.ApplyArticleAn(toks)
 
-	// 5) normalize spaces, then punctuation rules
+	// Normalize spaces, punctuation
 	toks = transform.ApplySpaces(toks)
 	toks = transform.ApplyPunctuation(toks)
 
-	// 6) drop any leftover (unknown/malformed) tags
+	// Drop any leftover/unknown tags
 	toks = transform.ApplyDropTags(toks)
 
-	// 7) final sweep: collapse plain spaces & trim leading/trailing plain space
+	// FINAL: remove plain spaces flush against quote edges
+	toks = transform.ApplyTightenQuoteEdges(toks)
+
+	// Final sweep: collapse plain spaces and trim ends (preserve newlines)
 	toks = transform.ApplySpacesWithTrim(toks, true)
 
 	return token.Join(toks)
