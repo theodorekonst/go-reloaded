@@ -4,7 +4,8 @@ import "go-reloaded/internal/token"
 
 // ApplySpaceBeforeOpeningQuote inserts a single plain space when a Word
 // is immediately followed by an opening Quote with no space in between:
-//   this'works' -> this 'works'
+//
+//	this'works' -> this 'works'
 func ApplySpaceBeforeOpeningQuote(toks []token.Tok) []token.Tok {
 	out := make([]token.Tok, 0, len(toks))
 	for i := 0; i < len(toks); i++ {

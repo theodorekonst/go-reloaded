@@ -9,12 +9,12 @@ import (
 // ApplyQuotes tightens spaces *inside* each pair of single quotes.
 //
 // Strategy:
-//   1) Find a quote pair.
-//   2) Drop Space tokens immediately after the opening quote and immediately before the closing quote.
-//   3) Join the interior tokens to a string, trim leading/trailing Unicode whitespace,
-//      then re-tokenize that interior string and append it back.
-//      This guarantees no stray boundary spaces even if earlier stages fused them into words.
-//   4) Emit closing quote. Unmatched quotes are left unchanged.
+//  1. Find a quote pair.
+//  2. Drop Space tokens immediately after the opening quote and immediately before the closing quote.
+//  3. Join the interior tokens to a string, trim leading/trailing Unicode whitespace,
+//     then re-tokenize that interior string and append it back.
+//     This guarantees no stray boundary spaces even if earlier stages fused them into words.
+//  4. Emit closing quote. Unmatched quotes are left unchanged.
 func ApplyQuotes(toks []token.Tok) []token.Tok {
 	out := make([]token.Tok, 0, len(toks))
 	i := 0

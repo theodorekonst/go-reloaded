@@ -17,9 +17,9 @@ func ProcessText(in string) string {
 
 	// QUOTES
 	toks = transform.ApplyQuotes(toks)
-	toks = transform.ApplyQuotes(toks)                // cheap second pass for tricky adjacencies
+	toks = transform.ApplyQuotes(toks) // cheap second pass for tricky adjacencies
 	toks = transform.ApplySpaceAfterClosingQuote(toks)
-	toks = transform.ApplySpaceBeforeOpeningQuote(toks)   // NEW
+	toks = transform.ApplySpaceBeforeOpeningQuote(toks) // NEW
 
 	// Articles
 	toks = transform.ApplyArticleAn(toks)
@@ -29,8 +29,8 @@ func ProcessText(in string) string {
 	toks = transform.ApplyPunctuation(toks)
 
 	// CLEANUP / SPECIALS
-	toks = transform.ApplyDashQuoteTight(toks)     // tighten —'quote' (remove space)
-	toks = transform.ApplyCaseNextMarker(toks)     // transform next word after case-range tag
+	toks = transform.ApplyDashQuoteTight(toks) // tighten —'quote' (remove space)
+	toks = transform.ApplyCaseNextMarker(toks) // transform next word after case-range tag
 	toks = transform.ApplyDropTags(toks)
 
 	// FINAL: remove plain spaces flush against quote edges

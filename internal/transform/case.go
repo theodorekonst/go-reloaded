@@ -49,8 +49,6 @@ func ApplyCaseTags(toks []token.Tok) []token.Tok {
 				idxs[a], idxs[b] = idxs[b], idxs[a]
 			}
 
-
-
 			// 3) Apply the transform
 			applyWord := func(s string) string {
 				switch mode {
@@ -79,9 +77,9 @@ func ApplyCaseTags(toks []token.Tok) []token.Tok {
 type caseKind int
 
 const (
-	caseUnknown caseKind = iota // not a case tag at all (e.g., hex/bin)
-	caseMalformed               // looks like case tag but invalid format/number
-	caseOK                      // valid case tag
+	caseUnknown   caseKind = iota // not a case tag at all (e.g., hex/bin)
+	caseMalformed                 // looks like case tag but invalid format/number
+	caseOK                        // valid case tag
 )
 
 // parseCaseTagTri parses "(up)", "(low, 3)", "(cap,0)" etc.

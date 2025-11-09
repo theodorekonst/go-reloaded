@@ -11,9 +11,10 @@ import (
 // It preserves newlines and interior spacing.
 //
 // Examples it fixes safely:
-//   "' hello'"   -> "'hello'"
-//   "'hello '"   -> "'hello'"
-//   "'  hello  '" stays "'hello  '" at the edges (interior spaces preserved)
+//
+//	"' hello'"   -> "'hello'"
+//	"'hello '"   -> "'hello'"
+//	"'  hello  '" stays "'hello  '" at the edges (interior spaces preserved)
 func ApplyTightenQuoteEdges(toks []token.Tok) []token.Tok {
 	out := make([]token.Tok, 0, len(toks))
 	i := 0
