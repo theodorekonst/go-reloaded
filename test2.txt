@@ -1,0 +1,67 @@
+'I am an ally,' and I know it.
+
+'I am an ally', and I know it.
+
+He said, 'I am an ally,'and left.
+
+He said, 'I am an ally', and left.
+
+'hello'!
+
+'hello'! world
+
+"Oops" is not used here — but: 'hi'?! ok
+
+Look, 'now'... here
+
+'wait...' now
+
+He muttered 'what!?'and ran
+
+He muttered 'what?!', really
+
+ok: 'hello'world
+
+ok: 'hello', world
+
+ok: 'hello'!? fine
+
+ok: 'hello'... fine
+
+'comma-inside,' works the same
+
+'comma-outside', works too
+
+Mix 'of, both' styles, ok
+
+'owl' an opportunity
+
+'hour' an honest call
+
+a 'apple'
+
+A 'Honest' trader
+
+'HELLO', World
+
+'Coded' example here
+
+'mixed' stays
+
+'number' 30, ok
+
+'bits' 10!
+
+'bad' tag
+
+'line one',
+line two
+
+end of thought 'here'...
+next line starts
+
+'unmatched start only, ok
+
+done here' end-only '' one '' two '' three ', done
+
+"fake" double quotes typed as two singles:''like this''end' note '.' aside ', ok' EOF '!

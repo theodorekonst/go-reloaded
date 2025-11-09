@@ -1,0 +1,75 @@
+' I am an ally , ' and I know it.
+
+' I am an ally ' , and I know it.
+
+He said, ' I am an ally , 'and left.
+
+He said , ' I am an ally ' ,and left .
+
+' hello ' !
+
+' hello '!world
+
+"Oops" is not used here (we only have single quotes) — but: ' hi ' ?! ok
+
+Look, ' now ' ...here
+
+' wait  ...  ' now
+
+He muttered ' what!? 'and ran
+
+He muttered ' what ?! ' ,really
+
+ok:' hello 'world
+
+ok:' hello ',world
+
+ok:' hello '!? fine
+
+ok:' hello '...fine
+
+' comma-inside, ' works the same
+
+' comma-outside ', works too
+
+Mix ' of , both ' styles ,ok
+
+' owl ' a opportunity
+
+' hour ' a honest call
+
+a ' apple '
+
+A ' Honest ' trader
+
+' hello ' (up) ,world
+
+' coded ' (cap, 2) example here
+
+'  mixed  ' (low, 0) stays
+
+' number ' 1E (hex) ,ok
+
+' bits ' 1010 (bin) !
+
+' bad ' (up, x) tag
+
+' line one ' ,
+line two
+
+end of thought ' here ' ...
+next line starts
+
+' unmatched start only , ok
+
+done here ' end-only '
+
+' one ' ' two ' ' three ',done
+
+"fake" double quotes typed as two singles: '' like this '' end
+
+' note ' (punctuation hugged and one space after).
+
+' aside ' (this is fine), ok
+
+' EOF ' !

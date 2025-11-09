@@ -15,20 +15,17 @@ func ProcessText(in string) string {
 	// Case tags
 	toks = transform.ApplyCaseTags(toks)
 
-	// Article correction
+	// Quotes: tighten, then ensure space after closing quote before words
+	toks = transform.ApplyQuotes(toks)
+	toks = transform.ApplySpaceAfterClosingQuote(toks)
+
+	// Articles (a -> an)
 	toks = transform.ApplyArticleAn(toks)
 
-	// Normalize spaces, then punctuation
+	// Normalize spaces, punctuation, drop any leftover tags, final tidy
 	toks = transform.ApplySpaces(toks)
 	toks = transform.ApplyPunctuation(toks)
-
-	// Finally, quotes tightening (after punctuation spacing)
-	toks = transform.ApplyQuotes(toks)
-
-	// Drop any unknown/malformed tags that survived
 	toks = transform.ApplyDropTags(toks)
-
-	// Final sweep: collapse any leftover plain spaces & trim ends
 	toks = transform.ApplySpacesWithTrim(toks, true)
 
 	return token.Join(toks)
