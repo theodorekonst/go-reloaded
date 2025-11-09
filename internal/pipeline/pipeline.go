@@ -17,8 +17,7 @@ func ProcessText(in string) string {
 
 	// 3) quotes: tighten insides, then ensure gap after closing quote before words
 	toks = transform.ApplyQuotes(toks)
-	// Safety: run twice to catch rare adjacency after earlier transforms
-	toks = transform.ApplyQuotes(toks)
+	toks = transform.ApplyQuotes(toks)                // extra pass (cheap, robust)
 	toks = transform.ApplySpaceAfterClosingQuote(toks)
 
 	// 4) articles (a -> an), skipping spaces & quotes to the next word
