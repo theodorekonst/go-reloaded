@@ -15,15 +15,17 @@ func ProcessText(in string) string {
 	// Case tags
 	toks = transform.ApplyCaseTags(toks)
 
-	// Quotes tightening, then article
-	toks = transform.ApplyQuotes(toks)
+	// Article correction
 	toks = transform.ApplyArticleAn(toks)
 
 	// NEW: collapse duplicate plain spaces (preserve line breaks)
 	toks = transform.ApplySpaces(toks)
 
-	// Finally, punctuation spacing rules
+	// Punctuation spacing rules
 	toks = transform.ApplyPunctuation(toks)
+
+	// Finally, quotes tightening (after punctuation spacing)
+	toks = transform.ApplyQuotes(toks)
 
 	return token.Join(toks)
 }
