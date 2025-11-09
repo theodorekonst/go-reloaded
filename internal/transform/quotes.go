@@ -6,10 +6,10 @@ import (
 	"go-reloaded/internal/token"
 )
 
-// ApplyQuotes tightens spaces *inside* each pair of single quotes.
+// ApplyQuotes tightens spaces *inside* each pair of matching quotes (single or double).
 //
 // Strategy:
-//  1. Find a quote pair.
+//  1. Find a matching quote pair.
 //  2. Drop Space tokens immediately after the opening quote and immediately before the closing quote.
 //  3. Join the interior tokens to a string, trim leading/trailing Unicode whitespace,
 //     then re-tokenize that interior string and append it back.
@@ -26,13 +26,14 @@ func ApplyQuotes(toks []token.Tok) []token.Tok {
 			continue
 		}
 
-		// Find closing quote linearly
+		// Find matching closing quote
+		openingQuote := toks[i].Text
 		j := i + 1
-		for j < len(toks) && toks[j].K != token.Quote {
+		for j < len(toks) && (toks[j].K != token.Quote || toks[j].Text != openingQuote) {
 			j++
 		}
 		if j >= len(toks) {
-			// No closing quote -> keep as-is
+			// No matching closing quote -> keep as-is
 			out = append(out, toks[i])
 			i++
 			continue

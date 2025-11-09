@@ -1,0 +1,19 @@
+# Binaries
+go-reloaded
+go-reloaded.exe
+*.exe
+
+# Test files
+*.tmp
+*_test_output.txt
+*_output.txt
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db

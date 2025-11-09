@@ -42,7 +42,7 @@ func Tokenize(s string) []Tok {
 
 	isPunct := func(rr rune) bool {
 		switch rr {
-		case '.', ',', '!', '?', ':', ';', '—':
+		case '.', ',', '!', '?', ':', ';', '—', '/':
 			return true
 		default:
 			return false
@@ -52,7 +52,7 @@ func Tokenize(s string) []Tok {
 	for i < n {
 		ch := r[i]
 
-		// 1) Quote (only standalone apostrophes, not embedded in words)
+		// 1) Quote (apostrophes and double quotes)
 		if ch == '\'' {
 			leftWord := i-1 >= 0 && isWordRune(r[i-1])
 			rightWord := i+1 < n && isWordRune(r[i+1])
@@ -64,6 +64,11 @@ func Tokenize(s string) []Tok {
 				i++
 				continue
 			}
+		}
+		if ch == '"' {
+			emit(Quote, i, i+1)
+			i++
+			continue
 		}
 
 		// 2) Group ("...", "?!", "!?")

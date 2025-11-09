@@ -18,14 +18,14 @@ func ProcessText(in string) string {
 	// Case tags
 	toks = transform.ApplyCaseTags(toks)
 
+	// Articles (AFTER case transforms)
+	toks = transform.ApplyArticleAn(toks)
+
 	// QUOTES
 	toks = transform.ApplyQuotes(toks)
 	toks = transform.ApplyQuotes(toks) // cheap second pass for tricky adjacencies
 	toks = transform.ApplySpaceAfterClosingQuote(toks)
 	toks = transform.ApplySpaceBeforeOpeningQuote(toks) // NEW
-
-	// Articles
-	toks = transform.ApplyArticleAn(toks)
 
 	// Normalize spaces, punctuation
 	toks = transform.ApplySpaces(toks)

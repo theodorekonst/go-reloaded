@@ -1,6 +1,8 @@
 # Go-reloaded
 
-A complete text transformation tool written in Go that processes files with special transformation tags and outputs corrected text. The project follows clean architecture principles with full separation of concerns.
+**Version:** 1.0.0
+
+A complete text transformation tool written in Go that changes text files using special commands. The project follows clean code design where each part has its own job.
 
 ## 🚀 Quick Start
 
@@ -39,14 +41,14 @@ Output: It was 66 and AN HONEST mistake
 
 ```
 go-reloaded/
-├── main.go                    # CLI entry point
+├── main.go                    # Command line program
 ├── internal/
-│   ├── io/                   # File operations
-│   ├── token/                # Text tokenization
-│   ├── transform/            # Transformation rules
-│   └── pipeline/             # Processing pipeline
-├── testdata/                 # Test files
-└── internal_test/            # Test suite
+│   ├── io/                   # Reading and writing files
+│   ├── token/                # Breaking text into pieces
+│   ├── transform/            # Text change rules (14 files)
+│   └── pipeline/             # Controls order of changes
+├── testdata/                 # Example test files
+└── internal_test/            # Test programs
 ```
 
 ## 🧪 Testing
@@ -128,19 +130,19 @@ Result:
 It was an honest mistake and an apple
 ```
 
-## 🏗️ Architecture
+## 🏗️ How It Works
 
-Pipeline Design for clean separation of concerns:
+Pipeline Design where each step does one job:
 
-1. **Tokenize** → Parse text into tokens
-2. **Hex** → Convert hexadecimal numbers
-3. **Bin** → Convert binary numbers
-4. **Case** → Apply case transformations
-5. **Quotes** → Tighten quoted text
-6. **Article** → Fix a→an corrections
-7. **Spaces** → Normalize spacing
-8. **Punctuation** → Format spacing
-9. **Join** → Reconstruct text
+1. **Break Apart** → Split text into pieces
+2. **Convert Hex** → Change hex numbers to regular numbers
+3. **Convert Binary** → Change binary numbers to regular numbers
+4. **Change Cases** → Make text uppercase, lowercase, or title case
+5. **Fix Quotes** → Remove extra spaces inside quotes
+6. **Fix Articles** → Change "a" to "an" when needed
+7. **Fix Spaces** → Remove extra spaces
+8. **Fix Punctuation** → Put punctuation in the right place
+9. **Put Together** → Combine everything back into text
 
 ## ✅ Features
 
@@ -162,4 +164,4 @@ Pipeline Design for clean separation of concerns:
 
 MIT License - see [LICENSE.txt](LICENSE.txt) for details.
 
-This project is part of a coding exercise demonstrating clean Go architecture and text processing techniques.
+This project shows clean Go code design and text processing techniques that are easy to understand and learn from.

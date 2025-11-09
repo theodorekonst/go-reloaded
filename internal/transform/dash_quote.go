@@ -15,7 +15,12 @@ func ApplyDashQuoteTight(toks []token.Tok) []token.Tok {
 			toks[i+2].K == token.Quote {
 			// emit dash, skip space, emit quote
 			out = append(out, toks[i], toks[i+2])
-			i += 3
+			// skip following spaces after quote
+			k := i + 3
+			for k < len(toks) && toks[k].K == token.Space {
+				k++
+			}
+			i = k - 1
 			continue
 		}
 		out = append(out, toks[i])

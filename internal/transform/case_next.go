@@ -31,5 +31,3 @@ func ApplyCaseNextMarker(toks []token.Tok) []token.Tok {
 	}
 	return out
 }
-
-

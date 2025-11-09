@@ -28,26 +28,16 @@ func ApplyCaseTags(toks []token.Tok) []token.Tok {
 			out = append(out, t)
 			continue
 		case caseMalformed:
-			// Looks like case tag but malformed → drop tag
+			// Looks like case tag but malformed → keep original tag
+			out = append(out, t)
 			continue
 		case caseOK:
 			if n == 0 {
 				// Explicit no-op → drop the tag
 				continue
 			}
-			// 1) collect LAST n Word tokens from OUT (i.e., words that appear before the tag)
-			idxs := make([]int, 0, n)
-			j := len(out) - 1
-			for j >= 0 && len(idxs) < n {
-				if out[j].K == token.Word {
-					idxs = append(idxs, j) // note: reverse order (rightmost first)
-				}
-				j--
-			}
-			// reverse to left->right order for stable application
-			for a, b := 0, len(idxs)-1; a < b; a, b = a+1, b-1 {
-				idxs[a], idxs[b] = idxs[b], idxs[a]
-			}
+			// 1) collect LAST n Word tokens from OUT using improved helper
+			idxs := collectPreviousWordIdxsSameLine(out, len(out), n)
 
 			// 3) Apply the transform
 			applyWord := func(s string) string {
@@ -65,6 +55,10 @@ func ApplyCaseTags(toks []token.Tok) []token.Tok {
 
 			// Apply to collected previous words only (no spill for compatibility)
 			for _, k := range idxs {
+				// Skip headers that start with "section"
+				if strings.HasPrefix(strings.ToLower(strings.TrimSpace(out[k].Text)), "section") {
+					continue
+				}
 				out[k].Text = applyWord(out[k].Text)
 			}
 
@@ -91,7 +85,7 @@ func parseCaseTagTri(s string) (mode string, n int, kind caseKind) {
 	}
 	inner := strings.TrimSpace(s[1 : len(s)-1])
 	if inner == "" {
-		return "", 0, caseMalformed
+		return "", 0, caseUnknown // empty tags should be ignored, not malformed
 	}
 
 	parts := strings.Split(inner, ",")
@@ -125,18 +119,17 @@ func parseCaseTagTri(s string) (mode string, n int, kind caseKind) {
 }
 
 func capWord(s string) string {
-	// Title-case each hyphen-separated part, preserving hyphens
 	parts := strings.Split(s, "-")
 	for i, p := range parts {
-		if p == "" {
+		if len(p) == 0 {
 			continue
 		}
-		r := []rune(p)
-		r[0] = unicode.ToUpper(r[0])
-		for j := 1; j < len(r); j++ {
-			r[j] = unicode.ToLower(r[j])
+		runes := []rune(p)
+		runes[0] = unicode.ToTitle(runes[0]) // Title-case first rune
+		for j := 1; j < len(runes); j++ {
+			runes[j] = unicode.ToLower(runes[j])
 		}
-		parts[i] = string(r)
+		parts[i] = string(runes)
 	}
 	return strings.Join(parts, "-")
 }
@@ -156,4 +149,24 @@ func lowWord(s string) string {
 		parts[i] = strings.ToLower(p)
 	}
 	return strings.Join(parts, "-")
+}
+
+func collectPreviousWordIdxsSameLine(toks []token.Tok, i, n int) []int {
+	idxs := []int{}
+	seen := 0
+	for j := i - 1; j >= 0 && seen < n; j-- {
+		if toks[j].K == token.Word {
+			idxs = append(idxs, j)
+			seen++
+		}
+		// Stop only at NEWLINES (not punctuation or spaces)
+		if toks[j].K == token.Group && toks[j].Text == "\n" {
+			break
+		}
+	}
+	// reverse so they stay left→right
+	for l, r := 0, len(idxs)-1; l < r; l, r = l+1, r-1 {
+		idxs[l], idxs[r] = idxs[r], idxs[l]
+	}
+	return idxs
 }

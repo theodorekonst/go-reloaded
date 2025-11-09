@@ -1,9 +1,5 @@
 # Go-reloaded
 
-## 🎯 Project Overview
-
-go-reloaded is a complete text transformation tool written in Go that processes files with special transformation tags and outputs corrected text. The project follows clean architecture principles with full separation of concerns.
-
 ## 📁 Project Structure
 
 ```
@@ -22,13 +18,14 @@ go-reloaded/
 │   │   └── file.go                   # File operations & overwrite handling
 │   ├── token/
 │   │   └── token.go                  # Tokenization & joining
-│   ├── transform/
-│   │   ├── convert.go                # Hex/binary conversions
-│   │   ├── case.go                   # Case transformations
-│   │   ├── article.go                # Article a→an correction
-│   │   ├── quotes.go                 # Quote tightening
-│   │   ├── punct.go                  # Punctuation spacing
-│   │   └── space.go                  # Space normalization
+│   ├── transform/                    # 14 files, each handles one type of change
+│   │   ├── convert.go                # Changes hex/binary numbers
+│   │   ├── case.go                   # Changes uppercase/lowercase
+│   │   ├── article.go                # Fixes "a" vs "an"
+│   │   ├── quotes.go                 # Fixes quote spacing
+│   │   ├── punct.go                  # Fixes punctuation spacing
+│   │   ├── space.go                  # Fixes extra spaces
+│   │   └── ... (8 more files)        # Other transformation rules
 │   └── pipeline/
 │       └── pipeline.go               # Transform orchestration
 ├── internal_test/
@@ -39,7 +36,9 @@ go-reloaded/
     ├── number_conversion.txt         # Number conversion tests
     ├── number_conversion.want.txt    # Expected number conversion output
     ├── article_correction.txt        # Article correction tests
-    └── article_correction.want.txt   # Expected article correction output
+    ├── article_correction.want.txt   # Expected article correction output
+    ├── final_all_cases.txt           # Complete integration tests
+    └── final_all_cases.want.txt      # Expected complete test output
 ```
 
 ## 🔧 Core Features Implemented
@@ -48,12 +47,12 @@ go-reloaded/
 
 - **Hex to Decimal:** `42 (hex)` → `66`
 - **Binary to Decimal:** `10 (bin)` → `2`
-- **Error Handling:** Invalid numbers keep word, drop tag
+- **Error Handling:** When numbers are invalid, keep the word and remove the command
 
 ### 2. Case Transformations
 
 - **Basic:** `word (up)` → `WORD`, `word (low)` → `word`, `word (cap)` → `Word`
-- **Range:** `these words (cap, 2)` → `These Words` (affects n previous words)
+- **Range:** `these words (cap, 2)` → `These Words` (changes the previous 2 words)
 - **Manual Parsing:** Handles spaces in tags like `(cap, 6)`
 
 ### 3. Article Correction
@@ -80,35 +79,35 @@ go-reloaded/
 
 ## 🏗️ Architecture Design
 
-### Pipeline Pattern
+### Pipeline Design
 
-Chosen over FSM for modularity and testability:
+Chosen over State Machine because it's easier to understand and test:
 
-1. **Tokenize** → Split into Word, Space, Quote, Punct, Group, Tag tokens
-2. **Hex** → Convert hexadecimal numbers
-3. **Bin** → Convert binary numbers
-4. **Case** → Apply case transformations
-5. **Quotes** → Tighten quoted text
-6. **Article** → Fix a→an
-7. **Spaces** → Normalize spacing
-8. **Punctuation** → Fix punctuation spacing
-9. **Join** → Combine back to text
+1. **Break Apart** → Split text into pieces (words, spaces, quotes, commands)
+2. **Convert Hex** → Change hex numbers to regular numbers
+3. **Convert Binary** → Change binary numbers to regular numbers
+4. **Change Cases** → Make text uppercase, lowercase, or title case
+5. **Fix Quotes** → Remove extra spaces inside quotes
+6. **Fix Articles** → Change "a" to "an" when needed
+7. **Fix Spaces** → Remove extra spaces
+8. **Fix Punctuation** → Put punctuation in the right place
+9. **Put Together** → Combine everything back into text
 
-### Separation of Concerns
+### Keeping Things Separate
 
-- **CLI Layer:** Argument validation, file I/O, user interaction
-- **Token Layer:** Text parsing and reconstruction
-- **Transform Layer:** Individual transformation rules
-- **Pipeline Layer:** Orchestration and flow control
+- **Command Line:** Handles user commands, reads/writes files, asks questions
+- **Text Processing:** Breaks text apart and puts it back together
+- **Transformation Rules:** Each rule for changing text (14 different files)
+- **Pipeline Control:** Decides the order of changes
 
 ## 🧪 Testing Strategy
 
 ### Golden Tests
 
-- **3 Test Pairs:** Input files with expected output files
-- **Descriptive Names:** Clear test purpose identification
-- **Comprehensive Coverage:** All transformation rules tested
-- **Automated Verification:** `go test ./...` runs all tests
+- **4 Test Pairs:** Input files with expected output files
+- **Clear Names:** Easy to understand what each test does
+- **Tests Everything:** All transformation rules are tested
+- **Automatic Testing:** `go test ./...` runs all tests
 
 ### Manual Testing
 
@@ -120,16 +119,16 @@ Chosen over FSM for modularity and testability:
 
 ### Code Quality
 
-- **No External Dependencies:** Pure Go standard library
-- **Junior Developer Friendly:** Simple, readable code
-- **Minimal Implementation:** Only essential code, no verbosity
-- **Error Handling:** Comprehensive error management
+- **No Extra Libraries:** Uses only built-in Go features
+- **Easy to Learn:** Simple, clear code for new developers
+- **Keep It Simple:** Only the necessary code, nothing extra
+- **Handle Errors Well:** Takes care of problems that might happen
 
-### Performance
+### Speed
 
-- **Single Pass:** Each transform processes tokens once
-- **Memory Efficient:** Token slices reused, minimal allocations
-- **Fast Execution:** Regex patterns compiled once
+- **One Pass:** Each step processes the text once
+- **Uses Memory Well:** Reuses memory, doesn't waste space
+- **Fast Processing:** Patterns are prepared once and reused
 
 ## 🎯 Final Results
 
@@ -180,5 +179,3 @@ word ,space ... end → word, space... end
 - **User-Friendly CLI:** Clear messages and prompts
 - **Maintainable Code:** Clean architecture, easy to extend
 - **Comprehensive Testing:** 100% rule coverage
-
-The go-reloaded project is a complete, production-ready text transformation tool that demonstrates clean Go architecture, comprehensive testing, and adherence to software engineering best practices.

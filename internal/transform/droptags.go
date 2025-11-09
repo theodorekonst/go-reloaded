@@ -7,7 +7,12 @@ func ApplyDropTags(toks []token.Tok) []token.Tok {
 	out := make([]token.Tok, 0, len(toks))
 	for _, t := range toks {
 		if t.K == token.Tag {
-			// Drop it
+			if t.Text == "()" {
+				// keep literal ()
+				out = append(out, token.Tok{K: token.Word, Text: "()"})
+				continue
+			}
+			// otherwise drop it
 			continue
 		}
 		out = append(out, t)

@@ -2,9 +2,9 @@
 
 ## 1️⃣ Problem Description
 
-go-reloaded is a text transformation tool written in Go that processes files with special transformation tags and outputs corrected text. It reads an input file, identifies transformation commands like `(hex)`, `(up, 2)`, or `(cap)`, applies the corresponding changes, and writes the result to an output file.
+go-reloaded is a text transformation tool written in Go that changes text files using special commands. It reads a text file, finds commands like `(hex)`, `(up, 2)`, or `(cap)`, makes the changes, and saves the result to a new file.
 
-The goal is to build a robust, maintainable system that handles multiple transformation types while preserving text structure and following clean architecture principles.
+The goal is to build a strong, easy-to-maintain program that can handle many different text changes while keeping the original text format.
 
 ## 2️⃣ Transformation Rules
 
@@ -78,12 +78,12 @@ word ... space → word... space
 ### What are the approaches?
 
 **Pipeline (Assembly Line)**
-- Each stage does one specific job and passes result to next stage
-- Like a factory: Tokenize → Convert → Transform → Format → Output
+- Each step does one job and passes the result to the next step
+- Like a factory: Break text apart → Convert numbers → Change cases → Fix spacing → Done
 
-**FSM (State Machine)**
-- Single processor that changes behavior based on current state
-- Like a smart robot: Reading → Found Tag → Apply Rule → Continue
+**State Machine**
+- One program that changes what it does based on what it finds
+- Like a smart robot: Reading text → Found a command → Apply the rule → Keep going
 
 ### Pipeline Implementation
 
@@ -170,20 +170,20 @@ func ApplyTransform(tokens []Token) []Token {
 }
 ```
 
-### Error Handling Philosophy
+### How We Handle Errors
 
-- **Graceful degradation:** Invalid input → keep original, drop tag
-- **Preserve structure:** Never corrupt original text format
-- **Fail safe:** Unknown tags pass through to other transforms
+- **Handle errors well:** When input is wrong → keep the text, remove the command
+- **Keep format safe:** Never break the original text layout
+- **Stay safe:** Unknown commands are ignored and passed to other steps
 
 ## 6️⃣ Testing Strategy
 
 ### Golden Tests
 
-- **Descriptive names:** `case_transforms.txt`, `number_conversion.txt`, `article_correction.txt`
-- **Input/Output pairs:** Each `.txt` has corresponding `.want.txt`
-- **Comprehensive coverage:** All transformation rules tested
-- **Integration testing:** Full pipeline validation
+- **Clear names:** `case_transforms.txt`, `number_conversion.txt`, `article_correction.txt`, `final_all_cases.txt`
+- **Input/Output pairs:** Each `.txt` file has a matching `.want.txt` file with expected results
+- **Tests everything:** All transformation rules are tested
+- **Full testing:** The entire pipeline is tested together
 
 ### Test Categories
 
@@ -195,47 +195,48 @@ func ApplyTransform(tokens []Token) []Token {
 
 ```
 go-reloaded/
-├── main.go                    # CLI interface
+├── main.go                    # Command line program
 ├── internal/
-│   ├── io/file.go            # File operations & overwrite handling
-│   ├── token/token.go        # Tokenization & reconstruction
-│   ├── transform/            # One file per transformation rule
-│   │   ├── convert.go        # Hex/binary conversions
-│   │   ├── case.go           # Case transformations
-│   │   ├── article.go        # Article corrections
-│   │   ├── quotes.go         # Quote tightening
-│   │   ├── punct.go          # Punctuation spacing
-│   │   └── space.go          # Space normalization
-│   └── pipeline/pipeline.go  # Transform orchestration
-├── testdata/                 # Golden test files
-└── internal_test/            # Test runner
+│   ├── io/file.go            # Reading and writing files
+│   ├── token/token.go        # Breaking text into pieces and putting it back
+│   ├── transform/            # 14 files, each handles one type of change
+│   │   ├── convert.go        # Changes hex/binary numbers
+│   │   ├── case.go           # Changes uppercase/lowercase
+│   │   ├── article.go        # Fixes "a" vs "an"
+│   │   ├── quotes.go         # Fixes quote spacing
+│   │   ├── punct.go          # Fixes punctuation spacing
+│   │   ├── space.go          # Fixes extra spaces
+│   │   └── ... (8 more)      # Other transformation rules
+│   └── pipeline/pipeline.go  # Controls the order of changes
+├── testdata/                 # Test files with examples
+└── internal_test/            # Test runner program
 ```
 
-### Design Principles
+### Design Rules
 
-- **Single Responsibility:** Each file has one clear purpose
-- **Separation of Concerns:** CLI, processing, and I/O are separate
-- **No External Dependencies:** Pure Go standard library
-- **Junior Developer Friendly:** Simple, readable code structure
+- **One job per file:** Each file does one thing well
+- **Keep things separate:** Command line, text processing, and file handling are in different places
+- **No extra libraries:** Uses only built-in Go features
+- **Easy to learn:** Simple, clear code that new developers can understand
 
 ## 8️⃣ Success Criteria
 
-### Functional Requirements
+### What the Program Must Do
 
-- ✅ All transformation rules implemented correctly
-- ✅ Edge cases handled gracefully
-- ✅ Original text structure preserved
-- ✅ Comprehensive error handling
+- ✅ All text transformation rules work correctly
+- ✅ Weird cases are handled well
+- ✅ Original text format is kept safe
+- ✅ Errors are handled properly
 
-### Quality Requirements
+### Code Quality Requirements
 
-- ✅ Clean, maintainable architecture
-- ✅ 100% test coverage of transformation rules
-- ✅ Cross-platform compatibility
-- ✅ Professional CLI interface
+- ✅ Clean, easy-to-maintain code structure
+- ✅ 100% test coverage of all transformation rules
+- ✅ Works on Windows, Mac, and Linux
+- ✅ Professional command line interface
 
-### Performance Requirements
+### Speed Requirements
 
-- ✅ Linear time complexity O(n)
-- ✅ Reasonable memory usage
-- ✅ Fast execution for typical text files
+- ✅ Processing time grows linearly with file size
+- ✅ Uses memory efficiently
+- ✅ Fast processing for normal text files
