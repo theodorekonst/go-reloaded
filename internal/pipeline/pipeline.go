@@ -8,6 +8,9 @@ import (
 func ProcessText(in string) string {
 	toks := token.Tokenize(in)
 
+	// Validate tags (must have space before)
+	toks = transform.ValidateTags(toks)
+
 	// Numbers
 	toks = transform.ApplyHex(toks)
 	toks = transform.ApplyBin(toks)
@@ -31,6 +34,7 @@ func ProcessText(in string) string {
 	// CLEANUP / SPECIALS
 	toks = transform.ApplyDashQuoteTight(toks) // tighten —'quote' (remove space)
 	toks = transform.ApplyCaseNextMarker(toks) // transform next word after case-range tag
+	toks = transform.CapitalizeI(toks)         // capitalize personal pronoun "I"
 	toks = transform.ApplyDropTags(toks)
 
 	// FINAL: remove plain spaces flush against quote edges

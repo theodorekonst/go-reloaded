@@ -53,9 +53,9 @@ func ApplyCaseTags(toks []token.Tok) []token.Tok {
 			applyWord := func(s string) string {
 				switch mode {
 				case "up":
-					return strings.ToUpper(s)
+					return upWord(s)
 				case "low":
-					return strings.ToLower(s)
+					return lowWord(s)
 				case "cap":
 					return capWord(s)
 				default:
@@ -125,10 +125,35 @@ func parseCaseTagTri(s string) (mode string, n int, kind caseKind) {
 }
 
 func capWord(s string) string {
-	if s == "" {
-		return s
+	// Title-case each hyphen-separated part, preserving hyphens
+	parts := strings.Split(s, "-")
+	for i, p := range parts {
+		if p == "" {
+			continue
+		}
+		r := []rune(p)
+		r[0] = unicode.ToUpper(r[0])
+		for j := 1; j < len(r); j++ {
+			r[j] = unicode.ToLower(r[j])
+		}
+		parts[i] = string(r)
 	}
-	runes := []rune(strings.ToLower(s))
-	runes[0] = unicode.ToUpper(runes[0])
-	return string(runes)
+	return strings.Join(parts, "-")
+}
+
+func upWord(s string) string {
+	// Uppercase all segments, keep hyphens
+	parts := strings.Split(s, "-")
+	for i, p := range parts {
+		parts[i] = strings.ToUpper(p)
+	}
+	return strings.Join(parts, "-")
+}
+
+func lowWord(s string) string {
+	parts := strings.Split(s, "-")
+	for i, p := range parts {
+		parts[i] = strings.ToLower(p)
+	}
+	return strings.Join(parts, "-")
 }

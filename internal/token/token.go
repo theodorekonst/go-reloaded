@@ -36,6 +36,10 @@ func Tokenize(s string) []Tok {
 		out = append(out, Tok{K: k, Text: string(r[start:end])})
 	}
 
+	isWordRune := func(rr rune) bool {
+		return unicode.IsLetter(rr) || unicode.IsDigit(rr)
+	}
+
 	isPunct := func(rr rune) bool {
 		switch rr {
 		case '.', ',', '!', '?', ':', ';', '—':
@@ -48,11 +52,18 @@ func Tokenize(s string) []Tok {
 	for i < n {
 		ch := r[i]
 
-		// 1) Quote
+		// 1) Quote (only standalone apostrophes, not embedded in words)
 		if ch == '\'' {
-			emit(Quote, i, i+1)
-			i++
-			continue
+			leftWord := i-1 >= 0 && isWordRune(r[i-1])
+			rightWord := i+1 < n && isWordRune(r[i+1])
+			if leftWord && rightWord {
+				// embedded in word -> let word scanner handle it
+				// fall through to word scanning
+			} else {
+				emit(Quote, i, i+1)
+				i++
+				continue
+			}
 		}
 
 		// 2) Group ("...", "?!", "!?")
@@ -113,23 +124,33 @@ func Tokenize(s string) []Tok {
 			// No closing ')': fall through to word scan
 		}
 
-		// 6) Word: consume until we hit space, quote, punct, group-start, tag-start, or parens
-		start := i
-		for i < n {
-			c := r[i]
-			// stop set: space, quote, punctuation, group starts, '(' or ')'
-			if unicode.IsSpace(c) || c == '\'' || isPunct(c) || c == '(' || c == ')' ||
-				c == '.' || c == '!' || c == '?' {
+		// 6) Word: consume word runes and embedded apostrophes
+		if isWordRune(ch) {
+			start := i
+			for i < n {
+				c := r[i]
+				if isWordRune(c) {
+					i++
+					continue
+				}
+				// allow apostrophe inside word when both sides are word runes
+				if c == '\'' && i+1 < n && i-1 >= start && isWordRune(r[i-1]) && isWordRune(r[i+1]) {
+					i++ // consume apostrophe as part of word
+					continue
+				}
+				// allow hyphen inside a word between word runes
+				if c == '-' && i+1 < n && i-1 >= start && isWordRune(r[i-1]) && isWordRune(r[i+1]) {
+					i++ // consume hyphen as part of word
+					continue
+				}
 				break
 			}
-			i++
-		}
-		if start == i {
-			// safety net: if we didn't advance (rare), consume one rune to avoid infinite loop
-			i++
-		} else {
 			emit(Word, start, i)
+			continue
 		}
+
+		// 7) Fallback: consume one rune to avoid infinite loop
+		i++
 	}
 
 	return out
