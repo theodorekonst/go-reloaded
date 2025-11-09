@@ -1,75 +1,56 @@
-' I am an ally , ' and I know it.
+(hex) Before anything begins...  there was '  chaos  '  (low, 9999999).  
+"Wait"—no, 'Wait'—actually (bin)  111111 (cap, 2) ... or was it (hex)  G1?  
 
-' I am an ally ' , and I know it.
+a hourglass fell... a honest man watched it (low,0) ;  and a unusual owl whispered, softly.  
+A honest hero heard 'a hour  of hope'... or maybe '  an hour  of horror  '?  
 
-He said, ' I am an ally , 'and left.
+'He said ''I am the chosen (up, 2) one'', then vanished!' she whispered, 'and so it begins...'  
+'She replied  : "  no (low, x) ... you’re wrong " ,and  left  .'  
+Notice?  There are nested single + double quotes + malformed tags in one sentence.  
 
-He said , ' I am an ally ' ,and left .
+' this   is  ...  '   (cap)  pure  madness  (up, 0)  !!!  
+and look closely — three exclamation marks (should stay tight!!!).  
 
-' hello ' !
+Binary trickery:  1010 (bin), 00000000 (bin), and 2b (bin) — wait, 2b isn’t valid binary (should remain).  
+Hex chaos:  FF (hex), 0x10 (hex), 10 (hex), G1 (hex), 1E (hex) .  
 
-' hello '!world
+Mix quotes and punctuation:  ' hello '!? ... ' goodbye '?!, both  should remain tight.  
+' punctuation ' (low, 2) and 'tags'  (cap, 1)  should  reorder nicely.  
 
-"Oops" is not used here (we only have single quotes) — but: ' hi ' ?! ok
+Spaces from hell: multiple     spaces     ,   and      tabs	,    plus newlines:
 
-Look, ' now ' ...here
+A unusual event
+	with strange indentation
+and  trailing spaces   	   
 
-' wait  ...  ' now
+...should normalize but preserve the line structure.
 
-He muttered ' what!? 'and ran
+Now we get meta: '(up, 2)' should NOT transform inside quotes — it's just text.
+Same for '(hex)' inside quotes: "'(hex)' is literally said" — don’t convert.
 
-He muttered ' what ?! ' ,really
+Articles and capitalization collide: a Honest man, A honest day, a Owl, A unusual hour, A Hourglass.
+Also: 'a Honest trader' and 'A unusual apple' inside quotes.  
 
-ok:' hello 'world
+Crazy punctuation groups:  ...!?!!!??...?! Should all stay glued to previous word, with one space after.  
+Also edge punctuation before quotes: ,.'!?; should attach correctly like this: word,.'!?; 'quote'.  
 
-ok:' hello ',world
+Invalid combinations: (cap, -3) (low, 0x2) (up, y) (down, 2) — none should crash anything.
+Partial tags: (up (low), )cap), (,), ((up,3)), (low, 1 1).  
 
-ok:' hello '!? fine
+Check extreme numbers: FFFFFFFF (hex) should be converted safely to decimal if possible; 
+otherwise, just ignore gracefully.  
+Same for 111111111111111111111111111111111111111111111111111111111111111111 (bin).  
 
-ok:' hello '...fine
+Quotes hugging newlines:
+' first line '
+'second line'
+'single'line
+' end '!
 
-' comma-inside, ' works the same
+a honest ' apple ', a unusual ' hour ', a owl, A hour — all should be fixed correctly.
 
-' comma-outside ', works too
+Line endings: CRLF Windows style\r\n should be handled too.
+And Unicode edge: café (cap), naïve (low), résumé (up, 2) — should not corrupt multibyte chars.
 
-Mix ' of , both ' styles ,ok
-
-' owl ' a opportunity
-
-' hour ' a honest call
-
-a ' apple '
-
-A ' Honest ' trader
-
-' hello ' (up) ,world
-
-' coded ' (cap, 2) example here
-
-'  mixed  ' (low, 0) stays
-
-' number ' 1E (hex) ,ok
-
-' bits ' 1010 (bin) !
-
-' bad ' (up, x) tag
-
-' line one ' ,
-line two
-
-end of thought ' here ' ...
-next line starts
-
-' unmatched start only , ok
-
-done here ' end-only '
-
-' one ' ' two ' ' three ',done
-
-"fake" double quotes typed as two singles: '' like this '' end
-
-' note ' (punctuation hugged and one space after).
-
-' aside ' (this is fine), ok
-
-' EOF ' !
+End of everything... ' the final   test   ' (cap, 4)  ...?!  maybe   'or  not'!?!!!
+Ensure no extra space before EOF.
