@@ -33,27 +33,41 @@ func ApplyCaseTags(toks []token.Tok) []token.Tok {
 				// Explicit no-op → drop the tag
 				continue
 			}
-			// Walk backward over OUT (tokens already emitted) and transform the last n Word tokens
-			applied := 0
+			// 1) collect LAST n Word tokens from OUT (i.e., words that appear before the tag)
+			idxs := make([]int, 0, n)
 			j := len(out) - 1
-			for j >= 0 && applied < n {
-				switch out[j].K {
-				case token.Word:
-					switch mode {
-					case "up":
-						out[j].Text = strings.ToUpper(out[j].Text)
-					case "low":
-						out[j].Text = strings.ToLower(out[j].Text)
-					case "cap":
-						out[j].Text = capWord(out[j].Text)
-					}
-					applied++
-				default:
-					// skip Space/Quote/Punct/Group
+			for j >= 0 && len(idxs) < n {
+				if out[j].K == token.Word {
+					idxs = append(idxs, j) // note: reverse order (rightmost first)
 				}
 				j--
 			}
-			// Drop the tag itself
+			// reverse to left->right order for stable application
+			for a, b := 0, len(idxs)-1; a < b; a, b = a+1, b-1 {
+				idxs[a], idxs[b] = idxs[b], idxs[a]
+			}
+
+
+
+			// 3) Apply the transform
+			applyWord := func(s string) string {
+				switch mode {
+				case "up":
+					return strings.ToUpper(s)
+				case "low":
+					return strings.ToLower(s)
+				case "cap":
+					return capWord(s)
+				default:
+					return s
+				}
+			}
+
+			// Apply to collected previous words only (no spill for compatibility)
+			for _, k := range idxs {
+				out[k].Text = applyWord(out[k].Text)
+			}
+
 			continue
 		}
 	}

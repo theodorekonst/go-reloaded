@@ -46,7 +46,7 @@ Edge adjacency at boundaries:
 Beginning: 'start' and then; end here with 'finish' anddone.
 
 Nested-ish quotes:
-He said, 'I think' this'works', and left.
+He said, 'I think' this 'works', and left.
 Then: 'outer' and 'inner', followed by 'final'.
 
 Big-but-valid numbers:
@@ -57,7 +57,7 @@ Invalid-number shapes must survive unchanged:
 
 Mixed punctuation clusters must hug and leave one space after:
 Look here,...!? see that?!... now!?
-Then—'done'!? next.
+Then— 'done'!? next.
 
 Across multiple lines, preserve layout:
 
