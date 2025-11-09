@@ -1,4 +1,4 @@
-# go-reloaded
+# Go-reloaded
 
 A complete text transformation tool written in Go that processes files with special transformation tags and outputs corrected text. The project follows clean architecture principles with full separation of concerns.
 
