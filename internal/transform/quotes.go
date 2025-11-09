@@ -3,56 +3,44 @@ package transform
 import "go-reloaded/internal/token"
 
 func ApplyQuotes(toks []token.Token) []token.Token {
-	result := make([]token.Token, 0, len(toks))
-	i := 0
-	
-	for i < len(toks) {
-		if toks[i].K == 2 { // Quote=2
-			quoteChar := toks[i].Text
-			start := i
-			i++
-			
-			content := []token.Token{}
-			for i < len(toks) && !(toks[i].K == 2 && toks[i].Text == quoteChar) {
-				content = append(content, toks[i])
-				i++
+	out := make([]token.Token, 0, len(toks))
+	for i := 0; i < len(toks); i++ {
+		if toks[i].K == token.Quote {
+			// Find matching closing quote
+			j := i + 1
+			for j < len(toks) && toks[j].K != token.Quote {
+				j++
 			}
-			
-			if i < len(toks) {
-				result = append(result, toks[start])
-				
-				// Trim leading spaces (Space=1)
-				for len(content) > 0 && content[0].K == 1 {
-					content = content[1:]
-				}
-				
-				// Remove spaces before punctuation and all trailing spaces
-				clean := []token.Token{}
-				for j := 0; j < len(content); j++ {
-					// Skip spaces before punctuation
-					if content[j].K == 1 && j+1 < len(content) && content[j+1].K == 3 {
-						continue
-					}
-					clean = append(clean, content[j])
-				}
-				
-				// Aggressively trim ALL trailing spaces
-				for len(clean) > 0 && clean[len(clean)-1].K == 1 {
-					clean = clean[:len(clean)-1]
-				}
-				
-				result = append(result, clean...)
-				result = append(result, toks[i])
-				i++
-			} else {
-				result = append(result, toks[start])
-				result = append(result, content...)
+			if j >= len(toks) {
+				// No closing quote → keep as-is
+				out = append(out, toks[i])
+				continue
 			}
-		} else {
-			result = append(result, toks[i])
-			i++
+
+			// Tighten: remove spaces right inside quotes
+			// opening '
+			out = append(out, toks[i])
+
+			// left trim (right after opening)
+			k := i + 1
+			for k < j && toks[k].K == token.Space {
+				k++
+			}
+			// right trim (right before closing)
+			l := j - 1
+			for l > k && toks[l].K == token.Space {
+				l--
+			}
+			if k <= l {
+				out = append(out, toks[k:l+1]...)
+			}
+			// closing '
+			out = append(out, toks[j])
+
+			i = j
+			continue
 		}
+		out = append(out, toks[i])
 	}
-	
-	return result
+	return out
 }

@@ -7,58 +7,72 @@ import (
 	"go-reloaded/internal/token"
 )
 
-// ApplyCaseTags handles (up), (low), (cap) and (up, n)/(low, n)/(cap, n).
-// It counts only previous Word tokens (skips punctuation/spaces/quotes).
 func ApplyCaseTags(toks []token.Tok) []token.Tok {
 	out := make([]token.Tok, 0, len(toks))
 
 	for i := 0; i < len(toks); i++ {
 		t := toks[i]
-
-		// Only handle Tag tokens here; pass everything else through.
 		if t.K != token.Tag {
 			out = append(out, t)
 			continue
 		}
 
-		mode, n, ok := parseCaseTag(t.Text)
-		if !ok {
-			// Unknown tag -> keep it so other transforms get a chance.
+		mode, n, kind := parseCaseTagTri(t.Text)
+		switch kind {
+		case caseUnknown:
+			// Not a case tag → keep; another transform may handle it (hex/bin)
 			out = append(out, t)
 			continue
-		}
-
-		// Apply to previous n Word tokens (skip non-words).
-		j := len(out) - 1
-		applied := 0
-		for j >= 0 && applied < n {
-			if out[j].K == token.Word {
-				switch mode {
-				case "up":
-					out[j].Text = strings.ToUpper(out[j].Text)
-				case "low":
-					out[j].Text = strings.ToLower(out[j].Text)
-				case "cap":
-					out[j].Text = capWord(out[j].Text)
-				}
-				applied++
+		case caseMalformed:
+			// Looks like a case tag but malformed → drop tag, do nothing
+			continue
+		case caseOK:
+			// n==0 → explicitly do nothing, just drop the tag
+			if n == 0 {
+				continue
 			}
-			j--
+			// Apply to previous n Word tokens (skip non-words)
+			j := len(out) - 1
+			applied := 0
+			for j >= 0 && applied < n {
+				if out[j].K == token.Word {
+					switch mode {
+					case "up":
+						out[j].Text = strings.ToUpper(out[j].Text)
+					case "low":
+						out[j].Text = strings.ToLower(out[j].Text)
+					case "cap":
+						out[j].Text = capWord(out[j].Text)
+					}
+					applied++
+				}
+				j--
+			}
+			// Drop the tag itself
+			continue
 		}
-		// Drop the tag itself by not appending it.
 	}
 	return out
 }
 
-// parseCaseTag parses "(up)", "(low, 3)", "(cap,6)", etc.
-func parseCaseTag(s string) (mode string, n int, ok bool) {
+type caseKind int
+
+const (
+	caseUnknown caseKind = iota // not a case tag at all (e.g., hex/bin)
+	caseMalformed               // looks like case tag but invalid format/number
+	caseOK                      // valid case tag
+)
+
+// parseCaseTagTri parses "(up)", "(low, 3)", "(cap,0)" etc.
+// Returns (mode, n, kind). If kind==caseUnknown, ignore; if caseMalformed, drop; if caseOK, apply.
+func parseCaseTagTri(s string) (mode string, n int, kind caseKind) {
 	s = strings.TrimSpace(s)
 	if len(s) < 3 || s[0] != '(' || s[len(s)-1] != ')' {
-		return "", 0, false
+		return "", 0, caseUnknown
 	}
-	inner := strings.TrimSpace(s[1 : len(s)-1]) // content without parentheses
+	inner := strings.TrimSpace(s[1 : len(s)-1])
 	if inner == "" {
-		return "", 0, false
+		return "", 0, caseMalformed
 	}
 
 	parts := strings.Split(inner, ",")
@@ -66,27 +80,29 @@ func parseCaseTag(s string) (mode string, n int, ok bool) {
 
 	switch mode {
 	case "up", "low", "cap":
-		// valid
+		// looks like a case tag → now parse n (optional)
 	default:
-		return "", 0, false
+		return "", 0, caseUnknown
 	}
 
+	// default n = 1
 	n = 1
 	if len(parts) > 1 {
 		numStr := strings.TrimSpace(parts[1])
 		val := 0
+		if numStr == "" {
+			return "", 0, caseMalformed
+		}
 		for _, r := range numStr {
 			if r < '0' || r > '9' {
-				// invalid number -> treat as unknown tag
-				return "", 0, false
+				return "", 0, caseMalformed
 			}
 			val = val*10 + int(r-'0')
 		}
-		if val > 0 {
-			n = val
-		}
+		// allow n == 0 (no-op)
+		n = val
 	}
-	return mode, n, true
+	return mode, n, caseOK
 }
 
 func capWord(s string) string {

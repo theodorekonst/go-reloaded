@@ -18,14 +18,15 @@ func ProcessText(in string) string {
 	// Article correction
 	toks = transform.ApplyArticleAn(toks)
 
-	// NEW: collapse duplicate plain spaces (preserve line breaks)
+	// Normalize spaces, then punctuation
 	toks = transform.ApplySpaces(toks)
-
-	// Punctuation spacing rules
 	toks = transform.ApplyPunctuation(toks)
 
 	// Finally, quotes tightening (after punctuation spacing)
 	toks = transform.ApplyQuotes(toks)
+
+	// Final sweep: collapse any leftover plain spaces & trim ends
+	toks = transform.ApplySpacesWithTrim(toks, true)
 
 	return token.Join(toks)
 }
