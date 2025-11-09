@@ -1,0 +1,40 @@
+The ancient wizard found an incredible spell in a hidden archive. 
+He whispered softly, then shouted THE POWER WORDS, and paused...!? Was it working?
+
+Simply add 42 and 13, then 62, and finally 7. The total should amaze an honest observer.
+
+Bad tags should not explode: up, x low, -3 cap, +2 and weird ones like or (lower, 2) should be ignored gracefully. 
+Zero range should do nothing: hello world; stay the same please.
+
+Quotes must tighten: 'this is it!' and 'spaced words' but unmatched quotes should remain: 'unfinished line here
+Nested-ish pairs should be okay:' outer start 'and' inner here ', then back to normal.
+
+Invalid numbers must not convert: 0x1E should remain 0x1E; and 102 should remain 102. 
+Valid numbers should convert nearby: 170, 10, 255, 32.
+
+Case ranges skip punctuation: READY, SET; GO! should become READY, SET; GO! punctuation hugged and one space after.
+Title casing: become A Hero of legend → expect become a Hero Of legend; 
+but then an Eagle arrives; also An honest mistake becomes an honest mistake.
+
+Articles before vowels or h: an unusual aura; a hourglass; an Honest trader; an ENCHANTED blade; an owl watched; an apple fell.
+Keep case on A→An: An unusual event, An hour wasted, An honest tale.
+
+Multiple spaces around punctuation should normalize: 
+It was time, truly, indeed; yes! And then... we left?!
+
+Line breaks must stay:
+First line, with a pause...
+Second line continues, with more words!
+Third line asks a question?!
+
+Edge spacing with tags: 
+It was the END, or was it the BEGINNING? We Shall See!
+Also Check across Punctuation: Winter, Fall; Spring arrives now.
+
+Quotes around spans with punctuation inside should tighten only at the edges:' an owl hooted, softly; then silence 'and then we move on.' I must succeed 'he muttered;' do not fail 'he warned.
+
+Article after quotes and spaces:' owl 'an opportunity to learn; but' hour ' an honest error to fix.
+
+Mixed groups: wait... really!? or maybe?! who knows...
+
+Ensure no trailing space at EOF after punctuation.

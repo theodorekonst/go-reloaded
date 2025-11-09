@@ -1,0 +1,43 @@
+(hex)  The ancient wizard found a incredible spell in a hidden archive. 
+He whispered softly (low) , then shouted the power words (up, 3)   , and paused...  !?  Was it working ?
+
+Simply add 2A (hex) and 1101 (bin) , then 3E (hex) , and finally 111 (bin)  .  The total should amaze a honest observer.
+
+Bad tags should not explode: (up, x) (low, -3) (cap, +2)  and weird ones like (up,) or (lower, 2) should be ignored gracefully. 
+Zero range should do nothing: hello (up, 0) world; stay the same please.
+
+Quotes must tighten: ' this is it ! '  and  '   spaced   words   '  but unmatched quotes should remain: ' unfinished line here
+Nested-ish pairs should be okay: ' outer start ' and ' inner here ', then back to normal.
+
+Invalid numbers must not convert: 0x1E (hex) should remain 0x1E; and 102 (bin) should remain 102. 
+Valid numbers should convert nearby: AA (hex) ,  1010 (bin) , FF (hex) ,  100000 (bin) .
+
+Case ranges skip punctuation: ready , set ; go (up, 3) !  should become READY, SET; GO!  (punctuation hugged and one space after).
+Title casing: become a hero (cap, 2) of legend → expect become a Hero Of legend; 
+but then a eagle (cap) arrives; also A HONEST (low, 1) mistake becomes a honest mistake.
+
+Articles before vowels or h: a unusual aura; a hourglass; a Honest trader; a ENCHANTED blade; a owl watched; a apple fell.
+Keep case on A→An: A unusual event, A hour wasted, A honest tale.
+
+Multiple spaces around punctuation should normalize: 
+It  was  time  ,  truly   ,  indeed   ;  yes   !   And then ...   we left  ?!
+
+Line breaks must stay:
+First line, with a pause  ...
+Second line continues ,with more words !
+Third line asks a question   ?!
+
+Edge spacing with tags: 
+It was the end (up)    , or was it the beginning (up)   ?  We shall see (low, 2)   !
+Also check (cap, 4) across punctuation: winter , fall ; spring (cap, 4) arrives now.
+
+Quotes around spans with punctuation inside should tighten only at the edges:
+'  a owl hooted, softly   ;   then silence   ' and then we move on.
+'  I must succeed  ' he muttered; '  do not fail  '  he warned.
+
+Article after quotes and spaces:
+'   owl   '  a opportunity to learn; but '   hour   ' a honest error to fix.
+
+Mixed groups: wait ...really!?  or maybe ?!  who knows ...
+
+Ensure no trailing space at EOF after punctuation.

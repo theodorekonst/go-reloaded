@@ -97,34 +97,20 @@ func Tokenize(s string) []Tok {
 			continue
 		}
 
-		// 5) Tag: (letters [ , digits ] )
+		// 5) Tag: any balanced (...) — classify as a Tag token
 		if ch == '(' {
 			start := i
 			j := i + 1
-			// tag name: [a-zA-Z]+
-			for j < n && ((r[j] >= 'a' && r[j] <= 'z') || (r[j] >= 'A' && r[j] <= 'Z')) {
+			for j < n && r[j] != ')' {
 				j++
 			}
-			// optional part: , [spaces]* [digits]+
-			if j < n && r[j] == ',' {
-				j++
-				for j < n && unicode.IsSpace(r[j]) {
-					j++
-				}
-				dStart := j
-				for j < n && r[j] >= '0' && r[j] <= '9' {
-					j++
-				}
-				_ = dStart // we just allow; validation is done in transforms
-			}
-			// must end with ')'
 			if j < n && r[j] == ')' {
-				j++
-				emit(Tag, start, j)
-				i = j
+				// We found a closing ')'
+				emit(Tag, start, j+1)
+				i = j + 1
 				continue
 			}
-			// not a valid tag → fall back to word scan below
+			// No closing ')': fall through to word scan
 		}
 
 		// 6) Word: consume until we hit space, quote, punct, group-start, tag-start, or parens

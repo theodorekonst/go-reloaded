@@ -25,6 +25,9 @@ func ProcessText(in string) string {
 	// Finally, quotes tightening (after punctuation spacing)
 	toks = transform.ApplyQuotes(toks)
 
+	// Drop any unknown/malformed tags that survived
+	toks = transform.ApplyDropTags(toks)
+
 	// Final sweep: collapse any leftover plain spaces & trim ends
 	toks = transform.ApplySpacesWithTrim(toks, true)
 
