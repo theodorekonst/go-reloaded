@@ -77,11 +77,11 @@ word ... space → word... space
 
 ### What are the approaches?
 
-**Pipeline (Assembly Line)**
+**Pipeline**
 - Each step does one job and passes the result to the next step
 - Like a factory: Break text apart → Convert numbers → Change cases → Fix spacing → Done
 
-**State Machine**
+**FSM**
 - One program that changes what it does based on what it finds
 - Like a smart robot: Reading text → Found a command → Apply the rule → Keep going
 
