@@ -24,6 +24,8 @@ func ProcessText(in string) string {
 	// QUOTES
 	toks = transform.ApplyQuotes(toks)
 	toks = transform.ApplyQuotes(toks) // cheap second pass for tricky adjacencies
+	toks = transform.ApplyQuoteSpacingFix(toks) // Comprehensive quote spacing fix
+	toks = transform.ApplyApostropheSpacing(toks) // Fix apostrophe spacing
 	toks = transform.ApplySpaceAfterClosingQuote(toks)
 	toks = transform.ApplySpaceBeforeOpeningQuote(toks) // NEW
 
@@ -39,8 +41,20 @@ func ProcessText(in string) string {
 
 	// FINAL: remove plain spaces flush against quote edges
 	toks = transform.ApplyTightenQuoteEdges(toks)
+	// Apply quotes multiple times to ensure all spacing is fixed
+	toks = transform.ApplyQuotes(toks)
+	toks = transform.ApplyQuotes(toks)
+	toks = transform.ApplyQuoteSpacingFix(toks)
 
 	// Final sweep: collapse plain spaces and trim ends (preserve newlines)
+	toks = transform.ApplySpacesWithTrim(toks, true)
+	// One more punctuation pass to fix any remaining spacing issues
+	toks = transform.ApplyPunctuation(toks)
+	// Final space cleanup
+	toks = transform.ApplySpacesWithTrim(toks, true)
+	// Final spacing fix for all edge cases - MUST BE LAST
+	toks = transform.ApplyFinalSpacingFix(toks)
+	// One more space cleanup after final fix
 	toks = transform.ApplySpacesWithTrim(toks, true)
 
 	return token.Join(toks)

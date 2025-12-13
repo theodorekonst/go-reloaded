@@ -11,24 +11,27 @@ import (
 // If trimEnds is true, removes leading/trailing plain spaces.
 func ApplySpacesWithTrim(toks []token.Tok, trimEnds bool) []token.Tok {
 	out := make([]token.Tok, 0, len(toks))
-	lastWasPlain := false
+	lastWasSpace := false
 
 	for _, t := range toks {
 		if t.K != token.Space {
 			out = append(out, t)
-			lastWasPlain = false
+			lastWasSpace = false
 			continue
 		}
+		// Handle newline spaces separately
 		if strings.ContainsRune(t.Text, '\n') {
 			out = append(out, t)
-			lastWasPlain = false
+			lastWasSpace = false
 			continue
 		}
-		if lastWasPlain {
+		// Skip consecutive plain spaces
+		if lastWasSpace {
 			continue
 		}
+		// Add single space
 		out = append(out, token.Tok{K: token.Space, Text: " "})
-		lastWasPlain = true
+		lastWasSpace = true
 	}
 
 	if !trimEnds || len(out) == 0 {

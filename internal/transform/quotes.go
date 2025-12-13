@@ -42,24 +42,24 @@ func ApplyQuotes(toks []token.Tok) []token.Tok {
 		// Emit opening quote
 		out = append(out, toks[i])
 
-		// Strip Space tokens just inside the pair
-		k := i + 1
-		for k < j && toks[k].K == token.Space {
-			k++
+		// Process interior tokens, removing all spaces at edges
+		interior := toks[i+1 : j]
+		
+		// Remove all leading spaces
+		start := 0
+		for start < len(interior) && interior[start].K == token.Space {
+			start++
 		}
-		l := j - 1
-		for l >= k && toks[l].K == token.Space {
-			l--
+		
+		// Remove all trailing spaces
+		end := len(interior) - 1
+		for end >= start && interior[end].K == token.Space {
+			end--
 		}
-
-		// Re-emit the interior: join -> trim outer whitespace -> re-tokenize
-		if k <= l {
-			inner := token.Join(toks[k : l+1])
-			inner = trimUnicodeOuter(inner)
-			if inner != "" {
-				innerToks := token.Tokenize(inner)
-				out = append(out, innerToks...)
-			}
+		
+		// Add cleaned interior
+		if start <= end {
+			out = append(out, interior[start:end+1]...)
 		}
 
 		// Emit closing quote and jump past it
